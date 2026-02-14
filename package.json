@@ -1,0 +1,36 @@
+{
+    "bugs": {
+        "url": "https://github.com/Mutualzz/permissions.git/issues"
+    },
+    "devDependencies": {
+        "@types/node": "^25.1.0",
+        "bunchee": "^6.9.4"
+    },
+    "exports": {
+        ".": {
+            "import": "./dist/index.mjs",
+            "require": "./dist/index.cjs",
+            "types": "./dist/index.d.ts"
+        }
+    },
+    "files": [
+        "dist/**",
+        "dist"
+    ],
+    "main": "./dist/index.cjs",
+    "module": "./dist/index.mjs",
+    "name": "@mutualzz/permissions",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/Mutualzz/permissions.git"
+    },
+    "scripts": {
+        "build": "pnpm typecheck && bunchee",
+        "dev": "bunchee --watch",
+        "prepublishOnly": "pnpm build",
+        "typecheck": "tsc --noEmit"
+    },
+    "type": "module",
+    "types": "./dist/index.d.ts",
+    "version": "1.0.0"
+}
