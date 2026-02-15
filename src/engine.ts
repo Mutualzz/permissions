@@ -4,6 +4,8 @@ export function toBigInt(v: bigint | string): bigint {
     return typeof v === "bigint" ? v : BigInt(v);
 }
 
+export const ALL_BITS = BigInt("0xffffffffffffffff");
+
 export function resolveBaseBits(
     spaceId: Snowflake,
     roles: RoleLike[],
@@ -43,12 +45,12 @@ export function applyOverwriteLayer(
         bits |= allow;
     };
 
-    // 1) everyone
+    // everyone
     const everyoneOw = overwrites.find((o) => o.roleId === everyoneRoleId);
     if (everyoneOw)
         apply(toBigInt(everyoneOw.allow), toBigInt(everyoneOw.deny));
 
-    // 2) roles (aggregate)
+    // roles (aggregate)
     const memberSet = new Set(memberRoleIds);
     let roleAllow = 0n;
     let roleDeny = 0n;
@@ -68,7 +70,7 @@ export function applyOverwriteLayer(
     return bits;
 }
 
-export function resolveEffectiveChannelBits(args: {
+export function resolveEffectiveChannelBits(opts: {
     baseBits: bigint;
     userId: Snowflake;
     everyoneRoleId: Snowflake;
@@ -83,7 +85,7 @@ export function resolveEffectiveChannelBits(args: {
         memberRoleIds,
         parentOverwrites,
         channelOverwrites,
-    } = args;
+    } = opts;
 
     let bits = baseBits;
     bits = applyOverwriteLayer(
@@ -103,10 +105,10 @@ export function resolveEffectiveChannelBits(args: {
     return bits;
 }
 
-export function hasAll(bits: bigint, req: bigint): boolean {
-    return (bits & req) === req;
+export function hasAll(bits: bigint, required: bigint): boolean {
+    return (bits & required) === required;
 }
 
-export function hasAny(bits: bigint, req: bigint): boolean {
-    return (bits & req) !== 0n;
+export function hasAny(bits: bigint, required: bigint): boolean {
+    return (bits & required) !== 0n;
 }
