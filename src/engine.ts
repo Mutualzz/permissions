@@ -12,8 +12,10 @@ export function resolveBaseBits(
     memberRoleIds: Snowflake[],
 ): bigint {
     const rolesById = new Map<string, bigint>();
-    for (const role of roles)
+
+    for (const role of roles) {
         rolesById.set(role.id, toBigInt(role.permissions));
+    }
 
     let bits = 0n;
 
@@ -36,7 +38,7 @@ export function applyOverwriteLayer(
     memberRoleIds: Snowflake[],
     userId: Snowflake,
 ): bigint {
-    if (!overwrites?.length) return baseBits;
+    if (!overwrites || overwrites.length === 0) return baseBits;
 
     let bits = baseBits;
 
@@ -45,26 +47,34 @@ export function applyOverwriteLayer(
         bits |= allow;
     };
 
+    const everyoneId = everyoneRoleId;
+    const userIdStr = userId;
+    const memberSet = new Set(memberRoleIds);
+
     // everyone
-    const everyoneOw = overwrites.find((o) => o.roleId === everyoneRoleId);
+    const everyoneOw = overwrites.find(
+        (o) => o.roleId != null && o.roleId === everyoneId,
+    );
     if (everyoneOw)
         apply(toBigInt(everyoneOw.allow), toBigInt(everyoneOw.deny));
 
     // roles (aggregate)
-    const memberSet = new Set(memberRoleIds);
     let roleAllow = 0n;
     let roleDeny = 0n;
 
     for (const ow of overwrites) {
-        if (!ow.roleId) continue;
-        if (!memberSet.has(ow.roleId)) continue;
+        if (ow.roleId == null) continue;
+        const rid = ow.roleId;
+        if (!memberSet.has(rid)) continue;
         roleAllow |= toBigInt(ow.allow);
         roleDeny |= toBigInt(ow.deny);
     }
+
     apply(roleAllow, roleDeny);
 
-    // 3) member
-    const memberOw = overwrites.find((ow) => ow.userId === userId);
+    const memberOw = overwrites.find(
+        (ow) => ow.userId != null && ow.userId === userIdStr,
+    );
     if (memberOw) apply(toBigInt(memberOw.allow), toBigInt(memberOw.deny));
 
     return bits;
@@ -88,6 +98,7 @@ export function resolveEffectiveChannelBits(opts: {
     } = opts;
 
     let bits = baseBits;
+
     bits = applyOverwriteLayer(
         bits,
         parentOverwrites,
@@ -95,6 +106,7 @@ export function resolveEffectiveChannelBits(opts: {
         memberRoleIds,
         userId,
     );
+
     bits = applyOverwriteLayer(
         bits,
         channelOverwrites,
@@ -102,6 +114,7 @@ export function resolveEffectiveChannelBits(opts: {
         memberRoleIds,
         userId,
     );
+
     return bits;
 }
 
