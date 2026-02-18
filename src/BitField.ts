@@ -10,6 +10,20 @@ export class BitField<
         this.bits = bits;
     }
 
+    static fromString<T extends Record<string, bigint>, K extends keyof T>(
+        flags: Readonly<T>,
+        s: string,
+    ) {
+        return new BitField<T, K>(flags, BigInt(s));
+    }
+
+    static fromBits<T extends Record<string, bigint>, K extends keyof T>(
+        flags: Readonly<T>,
+        bits: bigint,
+    ) {
+        return new BitField<T, K>(flags, bits);
+    }
+
     has(key: K) {
         const f = this.flags[key];
         return (this.bits & f) === f;
@@ -80,21 +94,11 @@ export class BitField<
         return this.toString();
     }
 
+    toBigInt(): bigint {
+        return this.bits;
+    }
+
     clone(): BitField<T, K> {
         return new BitField(this.flags, this.bits);
-    }
-
-    static fromString<T extends Record<string, bigint>, K extends keyof T>(
-        flags: Readonly<T>,
-        s: string,
-    ) {
-        return new BitField<T, K>(flags, BigInt(s));
-    }
-
-    static fromBits<T extends Record<string, bigint>, K extends keyof T>(
-        flags: Readonly<T>,
-        bits: bigint,
-    ) {
-        return new BitField<T, K>(flags, bits);
     }
 }

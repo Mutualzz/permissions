@@ -4,7 +4,7 @@ export function toBigInt(v: bigint | string): bigint {
     return typeof v === "bigint" ? v : BigInt(v);
 }
 
-export const ALL_BITS = BigInt("0xffffffffffffffff");
+export const ALL_BITS = BigInt("0xFFFFFFFFFFFFFFFF");
 
 export function resolveBaseBits(
     spaceId: Snowflake,
