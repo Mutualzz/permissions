@@ -3,7 +3,7 @@
         "url": "https://github.com/Mutualzz/permissions.git/issues"
     },
     "devDependencies": {
-        "@types/node": "^25.1.0",
+        "@types/node": "^25.3.0",
         "bunchee": "^6.9.4"
     },
     "exports": {
