@@ -21,6 +21,12 @@ export const permissionFlags = {
     // Space
     ManageSpace: 1n << 9n,
 
+    // Voice
+    Connect: 1n << 10n,
+    Speak: 1n << 11n,
+    MuteMembers: 1n << 12n,
+    DeafenMembers: 1n << 13n,
+
     Administrator: 1n << 60n,
 } as const satisfies Record<string, bigint>;
 
