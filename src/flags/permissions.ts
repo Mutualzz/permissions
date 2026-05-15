@@ -26,10 +26,10 @@ export const permissionFlags = {
     // Text Channels
     ViewChannel: 1n << 17n, // Allows viewing a channel, includes reading text and joining voice
     SendMessages: 1n << 18n, // Allows sending messages in a channel
-    ReadMessageHistory: 1n << 19n, // Allows reading message history - TODO: Implement
+    ReadMessageHistory: 1n << 19n, // Allows reading message history
     ManageMessages: 1n << 20n, // Allows deleting other users' messages
     PinMessages: 1n << 21n, // Allows pinning messages - TODO: Implement
-    EmbedLinks: 1n << 22n, // Links sent by users get auto embedded - TODO: Implement
+    EmbedLinks: 1n << 22n, // Links sent by users get auto embedded
     AttachFiles: 1n << 23n, // Allows sending images and files - TODO: Implement
     SendTTSMessages: 1n << 24n, // Allows sending text-to-speech messages - TODO: Implement
     SendVoiceMessages: 1n << 25n, // Allows sending voice messages - TODO: Implement
